@@ -662,12 +662,10 @@ class Statistics(EventSettingsPermission, TemplateView):
                 dtstart=min(dates),
             )
             if len(data) > 1:
-                chart = pygal.Line(
+                chart = pygal.DateTimeLine(
                     height=100,
                     js=[],
                     style=pygal.style.LightenStyle('#3aa57c', font_family='Open Sans'),
-                    interpolate='hermite',
-                    interpolation_parameters={'type': 'kochanek_bartels', 'b': -1, 'c': 1, 't': 1},
                     fill=True,
                     title='',
                     show_legend=False,
@@ -676,8 +674,11 @@ class Statistics(EventSettingsPermission, TemplateView):
                     show_y_labels=True,
                     show_minor_y_labels=False,
                     min_scale=1,
+                    show_dots=False,
                 )
                 chart.value_formatter = lambda x: str(int(x))
-                chart.add('foo', [data.get(date.date(), 0) for date in date_range])
-                context['submission_timeline'] = chart.render().strip().decode()
+                chart.x_value_formatter = lambda x: x.strftime('%D')
+                chart_data = [(date, data.get(date.date(), 0)) for date in date_range]
+                chart.add('foo', chart_data)
+                context['submission_timeline'] = chart.render(is_unicode=True).strip()
         return context

@@ -1,9 +1,12 @@
 {% extends "orga/base.html" %}
+{% load compress %}
 {% load i18n %}
 {% load static %}
 
 {% block scripts %}
+{% compress js %}
 <script src="{% static 'vendored/pygal.js' %}"></script>
+{% endcompress %}
 {% endblock %}
 
 {% block content %}
