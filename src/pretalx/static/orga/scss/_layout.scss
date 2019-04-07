@@ -712,3 +712,17 @@ legend .submission-state-dropdown {
 .phase-option-row .row {
   margin-bottom: 8px;
 }
+
+.pygal-chart {
+  .dot {
+    fill-opacity: 0;
+    stroke-opacity: 0;
+  }
+  .tooltip .value {
+    font-size: 12px;
+  }
+  .vertical .axis.always_show .major.guide.line {
+    stroke-dasharray: 0;
+    opacity: 0.2 !important;
+  }
+}

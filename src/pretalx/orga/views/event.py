@@ -674,7 +674,6 @@ class Statistics(EventSettingsPermission, TemplateView):
                     show_y_labels=True,
                     show_minor_y_labels=False,
                     min_scale=1,
-                    show_dots=False,
                 )
                 chart.value_formatter = lambda x: str(int(x))
                 chart.x_value_formatter = lambda x: x.strftime('%D')
