@@ -151,5 +151,7 @@ urlpatterns = [
             '^schedule/api/availabilities/(?P<talkid>[0-9]+)/(?P<roomid>[0-9]+)/$',
             schedule.RoomTalkAvailabilities.as_view(), name='schedule.api.availabilities'
         ),
+
+        url('^statistics/$', event.Statistics.as_view(), name='statistics'),
     ])),
 ]

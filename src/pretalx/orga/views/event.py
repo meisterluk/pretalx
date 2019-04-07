@@ -635,3 +635,49 @@ def event_list(request):
         'pagination': {"more": total >= (offset + pagesize)},
     }
     return JsonResponse(doc)
+
+
+class Statistics(EventSettingsPermission, TemplateView):
+    template_name = 'orga/event/statistics.html'
+
+    def get_context_data(self, **kwargs):
+        import pygal
+        from django.conf import settings
+        from django.contrib.staticfiles.templatetags.staticfiles import static
+        from collections import Counter
+        from pretalx.common.models import ActivityLog
+        from dateutil import rrule
+        context = super().get_context_data(**kwargs)
+        data = Counter(
+            timestamp.date()
+            for timestamp in ActivityLog.objects.filter(
+                event=self.request.event, action_type='pretalx.submission.create'
+            ).values_list('timestamp', flat=True)
+        )
+        dates = data.keys()
+        if len(dates) > 1:
+            date_range = rrule.rrule(
+                rrule.DAILY,
+                count=(max(dates) - min(dates)).days + 1,
+                dtstart=min(dates),
+            )
+            if len(data) > 1:
+                chart = pygal.Line(
+                    height=100,
+                    js=[],
+                    style=pygal.style.LightenStyle('#3aa57c', font_family='Open Sans'),
+                    interpolate='hermite',
+                    interpolation_parameters={'type': 'kochanek_bartels', 'b': -1, 'c': 1, 't': 1},
+                    fill=True,
+                    title='',
+                    show_legend=False,
+                    no_prefix=True,
+                    show_x_labels=True,
+                    show_y_labels=True,
+                    show_minor_y_labels=False,
+                    min_scale=1,
+                )
+                chart.value_formatter = lambda x: str(int(x))
+                chart.add('foo', [data.get(date.date(), 0) for date in date_range])
+                context['submission_timeline'] = chart.render().strip().decode()
+        return context

@@ -1,0 +1,15 @@
+{% extends "orga/base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block scripts %}
+<script src="{% static 'vendored/pygal.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+
+{% if submission_timeline %}
+{{ submission_timeline|safe }}
+{% endif %}
+
+{% endblock %}
