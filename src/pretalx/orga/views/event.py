@@ -668,7 +668,6 @@ class Statistics(EventSettingsPermission, TemplateView):
                     style=pygal.style.LightenStyle('#3aa57c', font_family='Open Sans'),
                     fill=True,
                     title=str(_('Submissions over time')),
-                    show_title=False,
                     show_legend=False,
                     no_prefix=True,
                     show_x_labels=True,
@@ -681,4 +680,36 @@ class Statistics(EventSettingsPermission, TemplateView):
                 chart_data = [(date, data.get(date.date(), 0)) for date in date_range]
                 chart.add('foo', chart_data)
                 context['submission_timeline'] = chart.render(is_unicode=True).strip()
+        data = Counter(
+            submission.state
+            for submission in
+            self.request.event.submissions(manager='all_objects').all()
+        )
+        if data:
+            chart = pygal.Pie(
+                height=150,
+                js=[],
+                style=pygal.style.Style(font_family='Open Sans'),
+                title=str(_('Submissions per state')),
+                no_prefix=True,
+            )
+            for key, value in data.items():
+                chart.add(key, value)
+        context['submission_distribution'] = chart.render(is_unicode=True)
+        data = Counter(
+            str(submission.submission_type)
+            for submission in
+            self.request.event.submissions(manager='all_objects').all()
+        )
+        if data:
+            chart = pygal.Pie(
+                height=150,
+                js=[],
+                style=pygal.style.Style(font_family='Open Sans'),
+                title=str(_('Submissions per state')),
+                no_prefix=True,
+            )
+            for key, value in data.items():
+                chart.add(key, value)
+        context['submission_distribution_2'] = chart.render(is_unicode=True)
         return context
