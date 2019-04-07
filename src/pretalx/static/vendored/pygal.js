@@ -212,7 +212,7 @@
         }
       }
       legend = null;
-      if (serie_index !== null) {
+      if (serie_index !== null && config) {
         legend = config.legends[serie_index];
       }
       dy = 0;
@@ -222,7 +222,7 @@
         subval = _ref5[i];
         keys.push([subval, 'value-' + i]);
       }
-      if (config.tooltip_fancy_mode) {
+      if (config && config.tooltip_fancy_mode) {
         keys.push([xlink, 'xlink']);
         keys.unshift([x_label, 'x_label']);
         keys.unshift([legend, 'legend']);
@@ -236,7 +236,7 @@
           text.setAttribute('x', padding);
           text.setAttribute('dy', dy);
           text.classList.add(name.indexOf('value') === 0 ? 'value' : name);
-          if (name.indexOf('value') === 0 && config.tooltip_fancy_mode) {
+          if (name.indexOf('value') === 0 && config && config.tooltip_fancy_mode) {
             text.classList.add('color-' + serie_index);
           }
           if (name === 'xlink') {
@@ -292,10 +292,10 @@
         y = yconvert(el.getBBox().y + el.getBBox().height / 2) - h / 2;
       }
       _ref7 = get_translation(tt.parentElement), plot_x = _ref7[0], plot_y = _ref7[1];
-      if (x + w + plot_x > config.width) {
+      if (config && x + w + plot_x > config.width) {
         x = config.width - w - plot_x;
       }
-      if (y + h + plot_y > config.height) {
+      if (config && y + h + plot_y > config.height) {
         y = config.height - h - plot_y;
       }
       if (x + plot_x < 0) {
