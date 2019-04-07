@@ -663,11 +663,12 @@ class Statistics(EventSettingsPermission, TemplateView):
             )
             if len(data) > 1:
                 chart = pygal.DateTimeLine(
-                    height=100,
+                    height=200,
                     js=[],
                     style=pygal.style.LightenStyle('#3aa57c', font_family='Open Sans'),
                     fill=True,
-                    title='',
+                    title=str(_('Submissions over time')),
+                    show_title=False,
                     show_legend=False,
                     no_prefix=True,
                     show_x_labels=True,
